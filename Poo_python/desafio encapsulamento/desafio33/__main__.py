@@ -3,7 +3,7 @@ from senha import Credencial
 def main():
     s1= Credencial()
     try:
-        s1.senha='helton'
+        s1.senha='elton'
         #s1.validar('eltonsantos')
         print(s1.senha)
     except Exception as e:
