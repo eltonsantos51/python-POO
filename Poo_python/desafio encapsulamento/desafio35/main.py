@@ -7,10 +7,8 @@ def main():
     conta.sacar(500)
     
     print(conta)
+    inspect(conta, methods=True,private=True)
     
-    
-    
-
     
 if __name__ =='__main__':
     main()

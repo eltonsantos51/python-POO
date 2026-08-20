@@ -24,36 +24,40 @@ class ContaBancaria:
 
     def pedi_senha(self):
         while True:
-            senha=pwinput.pwinput(prompt='Criar senha:')
+            senha=pwinput.pwinput(prompt='Criar senha (conter no minimo 6 caraceter):')
             if len(senha) >=6:
                 break
         return senha
 
     def depositar(self,depositar:float=0):
-        self.deposito=abs(depositar)
-        self.__saldo= self.__saldo + self.deposito
-        print(f'Deposito de {self.deposito:.2f} na conta {self._id}')
-        
+        deposito=abs(depositar)
+        self.__saldo= self.__saldo + deposito
+        print(f'Deposito de {deposito:.2f} na conta {self._id}')
 
+
+    def validar_senha(self,senha:str):        
+        validar=sha256(senha.encode()).hexdigest()
+        return validar==self.__hash
+                
+        
     def sacar(self,saque:float=0,senha:str=None):
-        self.saque=abs(saque)
-        dsenha=senha
+        v_saque=abs(saque)
+        
         if senha is None:
             dsenha=pwinput.pwinput(prompt='senha:')
-            validar=sha256(dsenha.encode()).hexdigest()
-            if validar==self.__hash:
-                self.__saldo= self.__saldo - self.saque
-                print(f'Saque de {self.saque:.2f} autorizado na conta {self._id} ')
+        else: 
+            dsenha=senha   
 
-            else: 
-                print('senha incorreta')
-        else:
-            validar=sha256(dsenha.encode()).hexdigest()
-            if validar==self.__hash:
-                self.__saldo= self.__saldo - self.saque
-                print(f'Saque de {self.saque:.2f} autorizado na conta {self._id} ')
+        if self.validar_senha(dsenha)==True:
+            if v_saque<= self.__saldo:
+                self.__saldo= self.__saldo - v_saque
+                print(f'Saque de {v_saque:.2f} autorizado na conta {self._id} ')
             else:
-                print('senha incorreta')
+                print('Saldo insuficiente')
+        else: 
+            print('senha incorreta')
+        
+
     def __str__(self):
             return f'A conta {self._id} de {self.nome} tem {self.__saldo} de saldo'
     
