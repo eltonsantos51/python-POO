@@ -1,5 +1,5 @@
 from hashlib import sha256
-import pwinput
+from pwinput import pwinput
 class ContaBancaria:
     def __init__(self,id:int, nome:str, saldo:float=0, senha:str=None):
         self._id=id
@@ -8,23 +8,11 @@ class ContaBancaria:
         if senha is None:
             senha= self.pedi_senha()
         self.__hash=sha256(senha.encode()).hexdigest()
-        self.nome=nome
         print(f'Conta {id} criada com sucesso.Saldo total de {self.__saldo:.2f}')
-
-    @property
-    def nome(self):
-        return self._titular
-    @nome.setter
-    def nome(self, nome:str):
-        
-        if type(nome)== str and nome.replace(" ",'').isalpha():
-            self._titular=nome 
-        else:
-            raise ValueError('Por favor digite o nome do usuario')
 
     def pedi_senha(self):
         while True:
-            senha=pwinput.pwinput(prompt='Criar senha (conter no minimo 6 caraceter):')
+            senha=pwinput(prompt='Criar senha (conter no minimo 6 caraceter):')
             if len(senha) >=6:
                 break
         return senha
@@ -44,7 +32,7 @@ class ContaBancaria:
         v_saque=abs(saque)
         
         if senha is None:
-            dsenha=pwinput.pwinput(prompt='senha:')
+            dsenha=pwinput(prompt='senha:')
         else: 
             dsenha=senha   
 
@@ -56,8 +44,20 @@ class ContaBancaria:
                 print('Saldo insuficiente')
         else: 
             print('senha incorreta')
-        
 
+    @property
+    def nome(self):
+        return self._titular
+    @nome.setter
+    def nome(self, nome:str,senha:str=None):
+        n_senha=senha 
+        n_senha=pwinput(prompt=('senha: '))
+        if self.validar_senha(n_senha)==True:
+             print('Nome do usuario alterado com sucesso')
+             self._titular=nome
+        else:
+            print('Senha incorreta')
+        
     def __str__(self):
             return f'A conta {self._id} de {self.nome} tem {self.__saldo} de saldo'
     
